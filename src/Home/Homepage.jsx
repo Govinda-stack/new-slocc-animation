@@ -159,74 +159,92 @@ function Home() {
   const scrollImageRef = useRef(null);
   const welcomeTextRef = useRef(null);
 
-useEffect(() => {
-  const paths = logoRefs.current?.querySelectorAll('path');
-  // Main animation for the logo movement
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: containerRefs.current,
-      start: 'top center',
-      end: 'bottom center',
-      scrub: 0.3, // smoother and more responsive
-      markers: false,
-    },
-  })
-    .fromTo(
-      logoRefs.current,
-      {
-        opacity: 0,
-        y: -120,
-        x: 150,
-        scale: 1.4,
+  useEffect(() => {
+    const paths = logoRefs.current?.querySelectorAll('path');
+    if (!paths || paths.length === 0) {
+      console.warn('No paths found in logoRefs'); // Debug if paths are missing
+      return;
+    }
+  
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRefs.current,
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 0.2, // Smooth scrolling response
+        markers: false, // Set to true if you need to debug trigger points
       },
-      {
-        opacity: 1,
-        y: 50,
-        x: 300,
-        scale: 0.6,
-        ease: 'power3.out',
-      }
-    )
-    .to(
-      scrollImageRef.current,
-      {
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power3.out',
-      },
-      0
-    )
-    .to(logoRefs.current, {
-      opacity: 0,
-      y: 500,
-      x: 500,
-      scale: 0.2,
-      ease: 'power3.inOut',
+    })
+      .fromTo(
+        logoRefs.current,
+        {
+          opacity: 0,
+          y: -120,
+          x: 160,
+          scale: 1.4,
+        },
+        {
+          opacity: 1,
+          y: 50,
+          x: 300,
+          scale: 0.6,
+          duration: 1.5,
+          ease: 'power2.inOut',
+        }
+      )
+      .to(
+        scrollImageRef.current,
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.inOut',
+        },
+        '-=1.5' // Start fading image at the same time as logo appears
+      )
+      .to(
+        paths,
+        {
+          fill: '#064685',
+          stroke: '#064685',
+          duration: 1, // Gradual color change
+          ease: 'none',
+        },
+        '-=1.5' // Start color change at the same time as logo movement
+      )
+      .to(
+        logoRefs.current,
+        {
+          opacity: 0,
+          y: 500,
+          x: 500,
+          scale: 0.2,
+          duration: 1.5,
+          ease: 'power2.inOut',
+        },
+        '-=0.5' // Overlap slightly to keep movement continuous
+      )
+      .to(
+        paths,
+        {
+          fill: 'transparent',
+          stroke: 'black',
+          duration: 1,
+          ease: 'none',
+        },
+        '-=1' // Revert color during logo fade-out
+      );
+  
+    let timeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
     });
-
-ScrollTrigger.create({
-  trigger: welcomeTextRef.current,
-  start: 'top-=200 top',
-  toggleActions: 'play none none reverse',
-  onEnter: () => {
-    gsap.set(paths, {
-      fill: '#064685',
-      stroke: '#064685',
-    });
-  },
-  onLeaveBack: () => {
-    gsap.set(paths, {
-      fill: 'transparent',
-      stroke: 'black',
-    });
-  },
-  markers: false,
-});
-  return () => {
-    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-  };
-}, []);
-
+  
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      window.removeEventListener('resize', ScrollTrigger.refresh);
+    };
+  }, []);
   //2.) FEATURED PROJECTS section
 
   const section1Ref = useRef(null);
@@ -612,7 +630,7 @@ gsap.to(images, {
 
   {/* Blue SVG */}
 <svg
-  className="Move"
+  className="Move move_logo"
   width="384"
   height="383"
   viewBox="0 0 384 383"
@@ -639,9 +657,10 @@ gsap.to(images, {
   />
 </svg>
   <Container className="py-5">
-    <Row className="mb-4 d-flex" ref={welcomeTextRef}>
+    <Row className="mb-4 d-flex">
       <Col md={6} className="align-content-end head">
         <img src={Round} alt="scroling" className="scrol-top" ref={scrollImageRef} />
+
         <h2 className="same-head" >
           WELCOME TO SLOC
         </h2>
@@ -653,7 +672,7 @@ gsap.to(images, {
           properties, including luxurious apartments, plots, villas, and commercial space.
         </p>
       </Col>
-      <Col md={6} className="d-flex flex-wrap four-col-st">
+      <Col md={6} className="d-flex flex-wrap four-col-st" >
         <Col md={6} lg={6} className="right">
           <Card className="">
             <h3 className="text-primary">
@@ -672,7 +691,7 @@ gsap.to(images, {
             <p>Lorem Ipsum</p>
           </Card>
         </Col>
-        <Col md={6} lg={6} className="only-right">
+        <Col md={6} lg={6} className="only-right" ref={welcomeTextRef}>
           <Card>
             <h3 className="text-primary">
               <Counter className="Counter-no" to={24} from={0} />

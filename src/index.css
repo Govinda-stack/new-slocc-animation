@@ -186,12 +186,12 @@ img#rocket-image {
   display: flex;
   gap: 20px;
 }
-
+/* 
 .initial-image {
   width: 150px;
   height:150px;
   object-fit: cover;
-}
+} */
 
 .box-container {
   position: absolute;
@@ -226,8 +226,14 @@ img#rocket-image {
   object-fit: cover;
   position: absolute;
   left: -80px;
-  top: -58px;
+  top: 10px;
 }
+/* top: -58px; */
 img.Move {
   left: -25px;
+}
+
+svg.Move {
+  top: -150px;
+  left: -7px;
 }

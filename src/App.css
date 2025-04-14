@@ -447,7 +447,6 @@ section.Cta button.btn.btn-dark {
     object-fit: contain;
     background-position: top right;
     z-index: -1;
-
   }
 
 
@@ -817,7 +816,7 @@ section.featured .card-title.h5 {
   z-index: -1;
   /* Below the card */
   visibility: hidden;
-  /* Initially hidden until animation */
+  /*  ly hidden until animation */
 }
 
 .image-stack {
@@ -833,4 +832,9 @@ section.featured .card-title.h5 {
   z-index: -1 !important;
   /* Make sure this stays behind */
   position: absolute;
+}
+
+svg.Move.move_logo {
+  top: -70px !important;
+  left: 27px !important;
 }
