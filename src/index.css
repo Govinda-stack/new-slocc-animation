@@ -212,12 +212,12 @@ img#rocket-image {
 
 
 .bottom-image {
-  width: 150px;
-  height: 150px;
+  height: 50px;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1;
 }
 .initial-image {
   width: 50px; /* Adjust to match blg.png’s rendered size */

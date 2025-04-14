@@ -843,3 +843,9 @@ img.bottom-image {
 .features-row.row {
   z-index: -1;
 }
+section.Cta.position-relative {
+  z-index: -1 !important;
+}
+.features-list.p-0.col-md-4 {
+  z-index: -1;
+}
