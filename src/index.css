@@ -219,14 +219,11 @@ img#rocket-image {
   left: 50%;
   transform: translateX(-50%);
 }
-
 .initial-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
+  width: 50px; /* Adjust to match blg.png’s rendered size */
+  height: auto;
   position: absolute;
-  left: -80px;
-  top: 10px;
+  /* z-index: 1; Ensure it’s above card during animation */
 }
 /* top: -58px; */
 img.Move {

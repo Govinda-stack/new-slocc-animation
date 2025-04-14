@@ -305,7 +305,7 @@ function Home() {
         {
           opacity: 0,
           y: 500,
-          x: 570,
+          x: 530,
           scale: 0.2,
           duration: 1.5,
           ease: 'power2.inOut',
@@ -564,19 +564,72 @@ function Home() {
       const section2Image = section2ImageRef.current;
     
       // Top Images Animation (Move into ::before)
+      // images.forEach((img, index) => {
+      //   const box = boxes[index];
+    
+      //   const getOffsets = () => {
+      //     const boxRect = box.getBoundingClientRect();
+      //     const imgRect = img.getBoundingClientRect();
+      //     // Adjust to match the ::before position (top: 7px, left: -5px relative to card)
+      //     return {
+      //       x: boxRect.left - 5 - (imgRect.left + imgRect.width / 2) + boxRect.width / 2,
+      //       y: boxRect.top + 7 - (imgRect.top + imgRect.height / 2) + boxRect.height / 2,
+      //     };
+      //   };
+    
+      //   gsap.fromTo(
+      //     img,
+      //     {
+      //       x: 0,
+      //       y: -170,
+      //       scale: 1,
+      //       opacity: 1,
+      //       visibility: "hidden",
+      //     },
+      //     {
+      //       x: () => getOffsets().x,
+      //       y: () => getOffsets().y,
+      //       scale: 1,
+      //       opacity: 1, // Fade out as it reaches the ::before position
+      //       visibility: "visible",
+      //       ease: "power2.out",
+      //       scrollTrigger: {
+      //         trigger: section1Ref.current,
+      //         start: "top center+=95",
+      //         end: "bottom center",
+      //         scrub: true,
+      //         onUpdate: (self) => {
+      //           const imgRect = img.getBoundingClientRect();
+      //           const boxRect = box.getBoundingClientRect();
+      //           const isInside = imgRect.top < boxRect.bottom && imgRect.bottom > boxRect.top;
+      //           if (isInside) {
+      //             box.style.backgroundColor = "#EFF7FE"; // Optional: Keep if you want the background change
+      //           } else {
+      //             box.style.backgroundColor = "";
+      //           }
+      //         },
+      //         onComplete: () => {
+      //           // Hide the initial image and let ::before take over
+      //           gsap.set(img, { visibility: "hidden" });
+      //         },
+      //       },
+      //     }
+      //   );
+      // });
       images.forEach((img, index) => {
         const box = boxes[index];
-    
+        const cardImg = box.querySelector('img.card-img-top'); // Get the <Card.Img>
+      
         const getOffsets = () => {
-          const boxRect = box.getBoundingClientRect();
+          const cardImgRect = cardImg.getBoundingClientRect();
           const imgRect = img.getBoundingClientRect();
-          // Adjust to match the ::before position (top: 7px, left: -5px relative to card)
+          // Target 220px above the top-right corner of the card's top image
           return {
-            x: boxRect.left - 5 - (imgRect.left + imgRect.width / 2) + boxRect.width / 2,
-            y: boxRect.top + 7 - (imgRect.top + imgRect.height / 2) + boxRect.height / 2,
+            x: cardImgRect.right - imgRect.width / 2 - imgRect.left, // Center at right edge
+            y: cardImgRect.top - 220 + imgRect.height / 2 - imgRect.top, // Center 220px above top
           };
         };
-    
+      
         gsap.fromTo(
           img,
           {
@@ -590,12 +643,12 @@ function Home() {
             x: () => getOffsets().x,
             y: () => getOffsets().y,
             scale: 1,
-            opacity: 1, // Fade out as it reaches the ::before position
+            opacity: 1,
             visibility: "visible",
             ease: "power2.out",
             scrollTrigger: {
               trigger: section1Ref.current,
-              start: "top center+=95",
+              start: "top center+=225",
               end: "bottom center",
               scrub: true,
               onUpdate: (self) => {
@@ -603,14 +656,13 @@ function Home() {
                 const boxRect = box.getBoundingClientRect();
                 const isInside = imgRect.top < boxRect.bottom && imgRect.bottom > boxRect.top;
                 if (isInside) {
-                  box.style.backgroundColor = "#EFF7FE"; // Optional: Keep if you want the background change
+                  box.style.backgroundColor = "#EFF7FE";
                 } else {
                   box.style.backgroundColor = "";
                 }
               },
               onComplete: () => {
-                // Hide the initial image and let ::before take over
-                gsap.set(img, { visibility: "hidden" });
+                gsap.set(img, { visibility: "hidden" }); // Hide to "stick" at position
               },
             },
           }

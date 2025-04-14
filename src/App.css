@@ -434,7 +434,7 @@ section.Cta button.btn.btn-dark {
   }
   /* Blogs  */
   section.featured .features-list .card:before{
-    background-image: url(./assets/Imgs/blg.png);
+    /* background-image: url(./assets/Imgs/blg.png); */
     position: absolute;
     content: '';
     top: 7px;
@@ -819,9 +819,7 @@ section.featured .card-title.h5 {
   /*  ly hidden until animation */
 }
 
-.image-stack {
-  top: -112px;
-}
+
 .image-stack-1{
   top: 0 !important;
 }
@@ -840,4 +838,8 @@ svg.Move.move_logo {
 }
 img.bottom-image {
     z-index: -1 !important;
+}
+
+.features-row.row {
+  z-index: -1;
 }
