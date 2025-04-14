@@ -247,6 +247,89 @@ function Home() {
   // }, []);
   //2.) FEATURED PROJECTS section
 
+  // useEffect(() => {
+  //   const paths = logoRefs.current?.querySelectorAll('path');
+  //   if (!paths || paths.length === 0) {
+  //     console.warn('No paths found in logoRefs');
+  //     return;
+  //   }
+  
+  //   const tl = gsap.timeline({
+  //     scrollTrigger: {
+  //       trigger: containerRefs.current,
+  //       start: 'top center',
+  //       end: 'bottom center',
+  //       scrub: 0.2,
+  //       markers: false,
+  //     },
+  //   })
+  //     .fromTo(
+  //       logoRefs.current,
+  //       {
+  //         opacity: 0,
+  //         y: -120,
+  //         x: 160,
+  //         scale: 1.4,
+  //       },
+  //       {
+  //         opacity: 1,
+  //         y: 50,
+  //         x: 300,
+  //         scale: 0.6,
+  //         duration: 1.5,
+  //         ease: 'power2.inOut',
+  //       }
+  //     )
+  //     .to(
+  //       scrollImageRef.current,
+  //       {
+  //         opacity: 0,
+  //         duration: 0.2,
+  //         ease: 'power2.inOut',
+  //       },
+  //       '-=1.5'
+  //     )
+  //     .to(
+  //       paths,
+  //       {
+  //         fill: '#064685',
+  //         stroke: '#064685',
+  //         duration: 1,
+  //         ease: 'none',
+  //       },
+  //       '-=1.5'
+  //     )
+  //     .to(
+  //       logoRefs.current,
+  //       {
+  //         y: 570, // Increased from 500 to go lower
+  //         x: 630,
+  //         scale: 0.2,
+  //         duration: 1.5,
+  //         ease: 'power2.inOut',
+  //       },
+  //       '-=0.5'
+  //     )
+  //     .set(
+  //       logoRefs.current,
+  //       {
+  //         display: 'none', // Disappear after going lower
+  //       },
+  //       '>' // After the previous animation
+  //     );
+  
+  //   let timeout;
+  //   window.addEventListener('resize', () => {
+  //     clearTimeout(timeout);
+  //     timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
+  //   });
+  
+  //   return () => {
+  //     ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  //     window.removeEventListener('resize', () => {});
+  //   };
+  // }, []);
+
   useEffect(() => {
     const paths = logoRefs.current?.querySelectorAll('path');
     if (!paths || paths.length === 0) {
@@ -254,13 +337,31 @@ function Home() {
       return;
     }
   
+    // Variable to track if logo is hidden
+    let isHidden = false;
+  
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRefs.current,
         start: 'top center',
-        end: 'bottom center',
+        end: 'bottom center-=-30px', // Adjusted to 20px above (10px earlier than -10px)
         scrub: 0.2,
         markers: false,
+        onUpdate: (self) => {
+          // Detect scroll direction
+          if (self.direction === 1) {
+            // Scrolling down
+            isHidden = true;
+          } else if (self.direction === -1 && isHidden) {
+            // Scrolling up and logo is hidden
+            gsap.to(logoRefs.current, {
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power2.inOut',
+            });
+            isHidden = false;
+          }
+        },
       },
     })
       .fromTo(
@@ -292,8 +393,8 @@ function Home() {
       .to(
         paths,
         {
-          fill: '#064685',
-          stroke: '#064685',
+          fill: '#012fcb',
+          stroke: '#012fcb',
           duration: 1,
           ease: 'none',
         },
@@ -302,28 +403,35 @@ function Home() {
       .to(
         logoRefs.current,
         {
-          y: 570, // Increased from 500 to go lower
-          x: 630,
+          y: 560,
+          x: 610,
           scale: 0.2,
           duration: 1.5,
           ease: 'power2.inOut',
         },
         '-=0.5'
       )
-      .set(
+      .to(
         logoRefs.current,
         {
-          display: 'none', // Disappear after going lower
+          opacity: 0, // Fade out
+          duration: 0.5,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            isHidden = true; // Mark as hidden
+          },
         },
-        '>' // After the previous animation
+        '>'
       );
   
+    // Handle resize to refresh ScrollTrigger
     let timeout;
     window.addEventListener('resize', () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
     });
   
+    // Cleanup
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       window.removeEventListener('resize', () => {});
