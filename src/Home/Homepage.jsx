@@ -344,16 +344,26 @@ function Home() {
       scrollTrigger: {
         trigger: containerRefs.current,
         start: 'top center',
-        end: 'bottom center-=-30px', // Adjusted to 20px above (10px earlier than -10px)
+        end: 'bottom center-=-30px',
         scrub: 0.2,
         markers: false,
         onUpdate: (self) => {
-          // Detect scroll direction
-          if (self.direction === 1) {
+          // Detect scroll direction and progress
+          if (self.progress <= 0.05 && !isHidden) {
+            // Near the top of the section
+            gsap.to(logoRefs.current, {
+              opacity: 0,
+              duration: 0.3,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                isHidden = true;
+              },
+            });
+          } else if (self.direction === 1) {
             // Scrolling down
             isHidden = true;
-          } else if (self.direction === -1 && isHidden) {
-            // Scrolling up and logo is hidden
+          } else if (self.direction === -1 && isHidden && self.progress > 0.05) {
+            // Scrolling up, logo is hidden, and not at the top
             gsap.to(logoRefs.current, {
               opacity: 1,
               duration: 0.5,
@@ -403,7 +413,7 @@ function Home() {
       .to(
         logoRefs.current,
         {
-          y: 580,
+          y: 601,
           x: 609,
           scale: 0.2,
           duration: 1.5,
@@ -414,11 +424,11 @@ function Home() {
       .to(
         logoRefs.current,
         {
-          opacity: 0, // Fade out
+          opacity: 0,
           duration: 0.5,
           ease: 'power2.inOut',
           onComplete: () => {
-            isHidden = true; // Mark as hidden
+            isHidden = true;
           },
         },
         '>'
@@ -856,17 +866,17 @@ gsap.to([section2Image, ...bottomImages], {
 });
 
 // Reset background color of boxes when section2Ref is reached
-gsap.to(boxes, {
-  scrollTrigger: {
-    trigger: section2Ref.current,
-    start: "top center",
-    onEnter: () => {
-      boxes.forEach((box) => {
-        box.style.backgroundColor = "";
-      });
-    },
-  },
-});
+// gsap.to(boxes, {
+//   scrollTrigger: {
+//     trigger: section2Ref.current,
+//     start: "top center",
+//     onEnter: () => {
+//       boxes.forEach((box) => {
+//         box.style.backgroundColor = "";
+//       });
+//     },
+//   },
+// });
     }, []);
     const logoRefs1 = useRef(null);
     const containerRefs1 = useRef(null);

@@ -832,10 +832,10 @@ section.featured .card-title.h5 {
   position: absolute;
 }
 
-svg.Move.move_logo {
+/* svg.Move.move_logo {
   top: -70px !important;
   left: 27px !important;
-}
+} */
 img.bottom-image {
     z-index: -1 !important;
 }
@@ -848,4 +848,8 @@ section.Cta.position-relative {
 }
 .features-list.p-0.col-md-4 {
   z-index: -1;
+}
+svg.Move.move_logo {
+  top: -113px !important;
+  left: 29px !important;
 }
