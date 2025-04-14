@@ -206,7 +206,8 @@ body{
   }
   .scrol-top {
     position: absolute;
-    top: -50%;
+    /* top: -50%; */
+  top: -84%;
   }
 
   /* Featurs Section */

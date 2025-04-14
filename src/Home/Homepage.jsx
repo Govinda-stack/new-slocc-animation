@@ -271,7 +271,7 @@ ScrollTrigger.create({
           scrollTrigger: {
             trigger: section1Ref.current,
             // start: "top center",
-            start: "top center+=155",
+            start: "top center+=95",
             end: "bottom center",
             scrub: true,
             onUpdate: (self) => {
