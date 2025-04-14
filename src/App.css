@@ -838,3 +838,6 @@ svg.Move.move_logo {
   top: -70px !important;
   left: 27px !important;
 }
+img.bottom-image {
+  z-index: -1 !important;
+}

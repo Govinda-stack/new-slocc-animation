@@ -260,35 +260,84 @@ function Home() {
     const bottomImages = bottomImageRefs.current;
     const section2Image = section2ImageRef.current;
     // Top Images Animation
+    // images.forEach((img, index) => {
+    //   const box = boxes[index];
+
+    //   const xOffset = () => {
+    //     const boxRect = box.getBoundingClientRect();
+    //     const imgRect = img.getBoundingClientRect();
+    //     return boxRect.left + boxRect.width / 2 - (imgRect.left + imgRect.width / 2);
+    //   };
+
+    //   gsap.fromTo(
+    //     img,
+    //     {
+    //       x: 0,
+    //       // y: -170,
+    //       y: -170,
+    //       scale: 1,
+    //       opacity: 1,
+    //       visibility: "hidden",
+    //     },
+    //     {
+    //       x: xOffset,
+    //       y: 300,
+    //       scale: 1,
+    //       opacity: 1,
+    //       visibility: "visible",
+    //       ease: "power2.out",
+    //       scrollTrigger: {
+    //         trigger: section1Ref.current,
+    //         // start: "top center",
+    //         start: "top center+=95",
+    //         end: "bottom center",
+    //         scrub: true,
+    //         onUpdate: (self) => {
+    //           const imgRect = img.getBoundingClientRect();
+    //           const boxRect = box.getBoundingClientRect();
+    //           const isInside = imgRect.top < boxRect.bottom && imgRect.bottom > boxRect.top;
+    //           if (isInside) {
+    //             box.style.backgroundColor = "#EFF7FE";
+    //           } else {
+    //             box.style.backgroundColor = "";
+    //           }
+    //         },
+    //       },
+    //     }
+    //   );
+    // });
+
     images.forEach((img, index) => {
       const box = boxes[index];
-
-      const xOffset = () => {
+  
+      const getOffsets = () => {
         const boxRect = box.getBoundingClientRect();
         const imgRect = img.getBoundingClientRect();
-        return boxRect.left + boxRect.width / 2 - (imgRect.left + imgRect.width / 2);
+        // Adjust to match the ::before position (top: 7px, left: -5px relative to card)
+        return {
+          x: boxRect.left - 5 - (imgRect.left + imgRect.width / 2) + boxRect.width / 2,
+          y: boxRect.top + 7 - (imgRect.top + imgRect.height / 2) + boxRect.height / 2,
+        };
       };
-
+  
       gsap.fromTo(
         img,
         {
           x: 0,
-          // y: -170,
           y: -170,
           scale: 1,
           opacity: 1,
           visibility: "hidden",
         },
         {
-          x: xOffset,
-          y: 300,
+          x: () => getOffsets().x,
+          y: () => getOffsets().y,
           scale: 1,
-          opacity: 1,
+          opacity: 1, // Fade out as it reaches the ::before position
           visibility: "visible",
           ease: "power2.out",
           scrollTrigger: {
             trigger: section1Ref.current,
-            // start: "top center",
             start: "top center+=95",
             end: "bottom center",
             scrub: true,
@@ -301,6 +350,10 @@ function Home() {
               } else {
                 box.style.backgroundColor = "";
               }
+            },
+            onComplete: () => {
+              // Optionally hide the initial image and let ::before take over
+              gsap.set(img, { visibility: "hidden" });
             },
           },
         }
@@ -380,35 +433,35 @@ gsap.to(section2Image, {
   ease: "power2.out",
   scrollTrigger: {
     trigger: section2Ref.current,
-    start: "bottom center-=20", // Match bottom images' fade start
+    start: "bottom center-=10", // Match bottom images' fade start
     end: "bottom center", // Match collision point
     scrub: 1, // Match scrub for consistency
   },
 });
 
-// Section 2: Make section2ImageRef vanish at collision
-gsap.to(section2Image, {
-  opacity: 0, // Fully vanish
-  ease: "power2.out",
-  scrollTrigger: {
-    trigger: section2Ref.current,
-    start: "bottom center-=50", // Start fade just before collision
-    end: "bottom center", // Complete fade at collision
-    scrub: 1, // Faster scrub for precise timing
-  },
-});
+// // Section 2: Make section2ImageRef vanish at collision
+// gsap.to(section2Image, {
+//   opacity: 0, // Fully vanish
+//   ease: "power2.out",
+//   scrollTrigger: {
+//     trigger: section2Ref.current,
+//     start: "bottom center-=50", // Start fade just before collision
+//     end: "bottom center", // Complete fade at collision
+//     scrub: 1, // Faster scrub for precise timing
+//   },
+// });
 
     // Section 2: Move top images only
-    gsap.to(images, {
-      y: 750,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: section2Ref.current,
-        start: "top center",
-        end: "bottom center",
-        scrub: true,
-      },
-    });
+    // gsap.to(images, {
+    //   y: 750,
+    //   ease: "power2.out",
+    //   scrollTrigger: {
+    //     trigger: section2Ref.current,
+    //     start: "top center",
+    //     end: "bottom center",
+    //     scrub: true,
+    //   },
+    // });
 
     // Reset background color of boxes when section2Ref is reached
     gsap.to(boxes, {
@@ -440,8 +493,8 @@ gsap.to(section2Image, {
         .fromTo(logoRefs1.current,
           {
             opacity: 0,
-            y: -400,
-            x: 1250,
+            y: -490,
+            x: 1150,
           },
           {
             opacity: 1,
