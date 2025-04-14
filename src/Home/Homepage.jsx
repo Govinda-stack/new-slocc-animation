@@ -42,10 +42,10 @@ import PrevArrow from '../assets/Imgs/left.svg';
 import { Flip } from 'gsap/Flip';
 // import Logo1 from '../assets/Imgs/back-scrol.png'
 import Logo1 from '../assets/Imgs/blg.png'
-import BottomImg1 from '../assets/Imgs/Round.svg'
-import BottomImg2 from '../assets/Imgs/Round.svg'
-import BottomImg3 from '../assets/Imgs/Round.svg'
-import BottomImg4 from '../assets/Imgs/Round.svg'
+import BottomImg1 from '../assets/Imgs/back-cta.png'
+import BottomImg2 from '../assets/Imgs/back-cta.png'
+import BottomImg3 from '../assets/Imgs/back-cta.png'
+import BottomImg4 from '../assets/Imgs/back-cta.png'
 
 
 const projects = [
@@ -403,8 +403,8 @@ function Home() {
       .to(
         logoRefs.current,
         {
-          y: 560,
-          x: 610,
+          y: 580,
+          x: 609,
           scale: 0.2,
           duration: 1.5,
           ease: 'power2.inOut',
@@ -738,7 +738,7 @@ function Home() {
           // Target 220px above the top-right corner of the card's top image
           return {
             x: cardImgRect.right - imgRect.width / 2 - imgRect.left, // Center at right edge
-            y: cardImgRect.top - 195 + imgRect.height / 2 - imgRect.top, // Center 220px above top
+            y: cardImgRect.top - 215 + imgRect.height / 2 - imgRect.top, // Center 220px above top
           };
         };
       
@@ -871,16 +871,17 @@ gsap.to(boxes, {
     const logoRefs1 = useRef(null);
     const containerRefs1 = useRef(null);
     useEffect(() => {
-      gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRefs1.current,
-          start: "top center",
-          end: "bottom center",
-          scrub: 1.2, // smoother scrub
-          markers: false,
-        }
+          start: "top center+=30px", // -30px offset for scrolling up (delays start)
+          end: "bottom center-=-30px", // -30px offset for scrolling down
+          scrub: 1.2, // Smooth scrubbing for both directions
+          markers: false, // Set to true for debugging
+        },
       })
-        .fromTo(logoRefs1.current,
+        .fromTo(
+          logoRefs1.current,
           {
             opacity: 0,
             y: -490,
@@ -890,25 +891,31 @@ gsap.to(boxes, {
             opacity: 1,
             y: 50,
             x: 550,
-            ease: "power3.out"
-          },
-          {
-            opacity: 2,
-            y: 100,
-            x: 650,
-            ease: "power3.out"
+            ease: "power3.out",
+            duration: 1.5,
           }
         )
-        .to(logoRefs1.current,
-          {
-            opacity: 0,
-            y: 550,
-            x: 550,
-            scale: 0.2,
-            ease: "power3.inOut"
-          }
-        );
-  
+        .to(logoRefs1.current, {
+          opacity: 0,
+          y: 550,
+          x: 550,
+          scale: 0.2,
+          ease: "power3.inOut",
+          duration: 1.5,
+        });
+    
+      // Handle resize to refresh ScrollTrigger
+      let timeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
+      });
+    
+      // Cleanup
+      return () => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        window.removeEventListener("resize", () => {});
+      };
     }, []);
 
   const blogsectionRef = useRef(null);
@@ -931,7 +938,7 @@ gsap.to(boxes, {
         // Target 220px above the top-right corner of the card's top image
         return {
           x: cardImgRect.right - imgRect.width / 2 - imgRect.left, // Center at right edge
-          y: cardImgRect.top - 195 + imgRect.height / 2 - imgRect.top, // Center 220px above top
+          y: cardImgRect.top - 200 + imgRect.height / 2 - imgRect.top, // Center 220px above top
         };
       };
     

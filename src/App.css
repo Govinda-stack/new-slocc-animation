@@ -844,7 +844,7 @@ img.bottom-image {
   z-index: -1;
 }
 section.Cta.position-relative {
-  z-index: -1 !important;
+  z-index: -2 !important;
 }
 .features-list.p-0.col-md-4 {
   z-index: -1;
