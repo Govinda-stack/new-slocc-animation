@@ -639,10 +639,10 @@ gsap.to(images, {
   />
 </svg>
   <Container className="py-5">
-    <Row className="mb-4 d-flex">
+    <Row className="mb-4 d-flex" ref={welcomeTextRef}>
       <Col md={6} className="align-content-end head">
         <img src={Round} alt="scroling" className="scrol-top" ref={scrollImageRef} />
-        <h2 className="same-head" ref={welcomeTextRef}>
+        <h2 className="same-head" >
           WELCOME TO SLOC
         </h2>
         <p className="same-head-p">
