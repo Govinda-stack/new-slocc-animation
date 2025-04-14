@@ -991,31 +991,6 @@ gsap.to([section2Image, ...bottomImages], {
       );
     });
 // Collapse and vanish images into one at the bottom
-gsap.to(images, {
-  x: (i, target, targets) => {
-    const container = BlogsBottomsectionRef.current.getBoundingClientRect();
-    const imgRect = target.getBoundingClientRect();
-    const centerX = container.left + container.width / 2;
-    const imgCenterX = imgRect.left + imgRect.width / 2;
-    return centerX - imgCenterX;
-  },
-  y: (i, target, targets) => {
-    const container = BlogsBottomsectionRef.current.getBoundingClientRect();
-    const centerY = container.top + container.height / 2;
-    const imgRect = target.getBoundingClientRect();
-    const imgCenterY = imgRect.top + imgRect.height / 2;
-    return centerY - imgCenterY;
-  },
-  scale: 0,
-  opacity: 0,
-  ease: "power2.inOut",
-  scrollTrigger: {
-    trigger: BlogsBottomsectionRef.current,
-    start: "bottom-=200 center", // or adjust based on where you want convergence to begin
-    end: "bottom center",
-    scrub: true,
-  },
-});
 
   }, []);
 
