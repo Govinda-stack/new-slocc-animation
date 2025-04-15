@@ -824,31 +824,31 @@ bottomImages.forEach((img) => {
 });
 
 // Synchronized Fade-Out: section2Image and bottomImages
-// gsap.to([section2Image, ...bottomImages], {
-//   opacity: 0,
-//   scale: 0.4,
-//   // duration: 3.5,
-//   ease: "power2.out",
-//   scrollTrigger: {
-//     trigger: section2Ref.current,
-//     start: "bottom center-=20",
-//     end: "bottom center-=20",
-//     scrub: 5,
-//     onComplete: () => {
-//       // Lock hidden state
-//       gsap.set([section2Image, ...bottomImages], {
-//         opacity: 0,
-//         visibility: "hidden",
-//         overwrite: true, // Prevent other animations from overriding
-//       });
-//       // Mark as hidden to block onEnter
-//       bottomImages.forEach((img) => {
-//         img.dataset.hidden = "true";
-//       });
-//       section2Image.dataset.hidden = "true";
-//     },
-//   },
-// });
+gsap.to([section2Image], {
+  opacity: 0,
+  scale: 0.4,
+  // duration: 3.5,
+  ease: "power2.out",
+  scrollTrigger: {
+    trigger: section2Ref.current,
+    start: "bottom center-=20",
+    end: "bottom center-=20",
+    scrub: 5,
+    onComplete: () => {
+      // Lock hidden state
+      gsap.set([section2Image, ...bottomImages], {
+        opacity: 0,
+        visibility: "hidden",
+        overwrite: true, // Prevent other animations from overriding
+      });
+      // Mark as hidden to block onEnter
+      bottomImages.forEach((img) => {
+        img.dataset.hidden = "true";
+      });
+      section2Image.dataset.hidden = "true";
+    },
+  },
+});
 
 // Reset background color of boxes when section2Ref is reached
 // gsap.to(boxes, {
