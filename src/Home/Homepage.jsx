@@ -824,7 +824,7 @@ bottomImages.forEach((img) => {
 });
 
 // Synchronized Fade-Out: section2Image and bottomImages
-gsap.to([section2Image], {
+gsap.to([section2Image, ...bottomImages], {
   opacity: 0,
   scale: 0.4,
   // duration: 3.5,
