@@ -660,7 +660,40 @@ function Home() {
 //   }, []);
 
     //3.) Testimonials section
-    
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const rect = entry.target.getBoundingClientRect();
+              const viewportHeight = window.innerHeight;
+              const imageCenter = rect.top + rect.height / 2;
+  
+              if (imageCenter > viewportHeight / 4 && imageCenter < (3 * viewportHeight) / 4) {
+                entry.target.classList.add('new_hover');
+              } else {
+                entry.target.classList.remove('new_hover');
+              }
+            }
+          });
+        },
+        {
+          root: null, // Use viewport
+          threshold: 0.5, // Trigger when 50% visible
+        }
+      );
+  
+      if (section2ImageRef.current) {
+        observer.observe(section2ImageRef.current);
+      }
+  
+      // Cleanup observer on component unmount
+      return () => {
+        if (section2ImageRef.current) {
+          observer.unobserve(section2ImageRef.current);
+        }
+      };
+    }, []);
     useEffect(() => {
       const boxes = boxRefs.current;
       const images = imageRefs.current;
@@ -805,7 +838,7 @@ bottomImages.forEach((img) => {
       ease: "power2.out",
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: "top center+=70",
+        start: "top center+=-70",
         end: "bottom center-=20",
         scrub: 2,
         // onEnter: () => {
@@ -824,24 +857,56 @@ bottomImages.forEach((img) => {
 });
 
 // Synchronized Fade-Out: section2Image and bottomImages
+// gsap.to([section2Image], {
+//   opacity: 0,
+//   scale: 0.4,
+//   // duration: 3.5,
+//   ease: "power2.out",
+//   scrollTrigger: {
+//     trigger: section2Ref.current,
+//     start: "bottom center-=20",
+//     end: "bottom center-=20",
+//     scrub: 5,
+//     onComplete: () => {
+//       // Lock hidden state
+//       gsap.set([section2Image, ...bottomImages], {
+//         opacity: 0,
+//         visibility: "hidden",
+//         overwrite: true, // Prevent other animations from overriding
+//       });
+//       // Mark as hidden to block onEnter
+//       bottomImages.forEach((img) => {
+//         img.dataset.hidden = "true";
+//       });
+//       section2Image.dataset.hidden = "true";
+//     },
+//   },
+// });
+
 gsap.to([section2Image], {
   opacity: 0,
   scale: 0.4,
-  // duration: 3.5,
   ease: "power2.out",
   scrollTrigger: {
     trigger: section2Ref.current,
-    start: "bottom center-=20",
+    start: "bottom center-=20", // Triggers when bottom of section2Ref is 20px above center
     end: "bottom center-=20",
     scrub: 5,
+    onEnter: () => {
+      // Add new_hover class when entering the trigger point (center of viewport)
+      section2Image.classList.add("new_hover");
+    },
+    onLeave: () => {
+      // Optional: Remove class when leaving the trigger point
+      section2Image.classList.remove("new_hover");
+    },
     onComplete: () => {
       // Lock hidden state
       gsap.set([section2Image, ...bottomImages], {
         opacity: 0,
         visibility: "hidden",
-        overwrite: true, // Prevent other animations from overriding
+        overwrite: true,
       });
-      // Mark as hidden to block onEnter
       bottomImages.forEach((img) => {
         img.dataset.hidden = "true";
       });
