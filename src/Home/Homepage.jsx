@@ -338,45 +338,22 @@ function Home() {
       return;
     }
   
-    // Set initial faded color using GSAP to avoid FOUC (Flash of Unstyled Content)
+    // Set initial faded color using GSAP to avoid FOUC
     gsap.set(paths, {
-      fill: '#b3b3b3', // Light gray, faded look
+      fill: '#b3b3b3',
       stroke: '#b3b3b3',
     });
-  
-    // Variable to track if logo is hidden
-    let isHidden = false;
   
     // GSAP Timeline with ScrollTrigger
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRefs.current,
         start: 'top center',
-        end: 'bottom center-=-1vh',
-        scrub: 0.1, // Reduced for smoother response
+        end: 'bottom center',
+        scrub: 0.5, // Increased for smoother scrubbing
         markers: false,
-        onUpdate: (self) => {
-          // Simplified scroll direction logic
-          if (self.progress <= 0.05 && !isHidden) {
-            // Fade out near top
-            gsap.to(logoRefs.current, {
-              opacity: 0,
-              duration: 0.1,
-              ease: 'power2.inOut',
-              onComplete: () => {
-                isHidden = true;
-              },
-            });
-          } else if (self.progress > 0.05 && isHidden && self.direction === -1) {
-            // Fade in when scrolling up
-            gsap.to(logoRefs.current, {
-              opacity: 1,
-              duration: 0.3,
-              ease: 'power2.inOut',
-            });
-            isHidden = false;
-          }
-        },
+        anticipatePin: 1, // Improves pinning performance
+        fastScrollEnd: true, // Reduces lag at scroll end
       },
     })
       .fromTo(
@@ -385,36 +362,36 @@ function Home() {
           opacity: 0,
           y: -120,
           x: 160,
-          scale: 1.4,
-          willChange: 'transform, opacity', // Optimize rendering
+          scale: 0.9,
+          willChange: 'transform, opacity',
         },
         {
           opacity: 1,
           y: 50,
           x: 300,
           scale: 0.6,
-          duration: 1.2, // Slightly faster for smoother feel
-          ease: 'power2.inOut',
+          duration: 1,
+          ease: 'power3.out', // Smoother easing
         }
       )
       .to(
         scrollImageRef.current,
         {
           opacity: 0,
-          duration: 0.15,
-          ease: 'power2.inOut',
+          duration: 0.2,
+          ease: 'power3.out',
         },
-        '-=1.2'
+        '-=1'
       )
       .to(
         paths,
         {
-          fill: '#012fcb', // Transition to final color
+          fill: '#012fcb',
           stroke: '#012fcb',
-          duration: 0.8, // Faster color transition
-          ease: 'none',
+          duration: 0.6, // Smoother color transition
+          ease: 'sine.out', // Gentle color easing
         },
-        '-=1.2'
+        '-=1'
       )
       .to(
         logoRefs.current,
@@ -422,35 +399,32 @@ function Home() {
           y: 601,
           x: 609,
           scale: 0.1,
-          duration: 3.2,
-          ease: 'power2.inOut',
+          duration: 2.5, // Reduced for better performance
+          ease: 'power3.inOut',
         },
-        '-=0.5'
+        '-=0.4'
       )
       .to(
         logoRefs.current,
         {
           opacity: 0,
-          duration: 0.3,
-          ease: 'power2.inOut',
-          onComplete: () => {
-            isHidden = true;
-          },
+          duration: 0.5, // Smoother fade-out
+          ease: 'sine.out',
         },
-        '>'
+        '-=1.1'
       );
   
-    // Debounced resize handler
+    // Optimized resize handler
     let timeout;
     const handleResize = () => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => ScrollTrigger.refresh(), 150); // Increased debounce time
+      timeout = setTimeout(() => ScrollTrigger.refresh(), 200);
     };
     window.addEventListener('resize', handleResize);
   
     // Cleanup
     return () => {
-      tl.kill(); // Kill the timeline
+      tl.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       window.removeEventListener('resize', handleResize);
     };
