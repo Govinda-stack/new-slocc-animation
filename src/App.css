@@ -819,10 +819,10 @@ section.featured .card-title.h5 {
   /*  ly hidden until animation */
 }
 
-
+/* 
 .image-stack-1{
   top: 0 !important;
-}
+} */
 
 
 
@@ -852,4 +852,7 @@ section.Cta.position-relative {
 svg.Move.move_logo {
   top: -113px !important;
   left: 29px !important;
+}
+.image-stack-1 {
+  top: -15px !important;
 }

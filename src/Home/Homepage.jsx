@@ -42,10 +42,10 @@ import PrevArrow from '../assets/Imgs/left.svg';
 import { Flip } from 'gsap/Flip';
 // import Logo1 from '../assets/Imgs/back-scrol.png'
 import Logo1 from '../assets/Imgs/blg.png'
-import BottomImg1 from '../assets/Imgs/back-cta.png'
-import BottomImg2 from '../assets/Imgs/back-cta.png'
-import BottomImg3 from '../assets/Imgs/back-cta.png'
-import BottomImg4 from '../assets/Imgs/back-cta.png'
+import BottomImg1 from '../assets/Imgs/blg.png'
+import BottomImg2 from '../assets/Imgs/blg.png'
+import BottomImg3 from '../assets/Imgs/blg.png'
+import BottomImg4 from '../assets/Imgs/blg.png'
 
 
 const projects = [
@@ -331,42 +331,48 @@ function Home() {
   // }, []);
 
   useEffect(() => {
+    // Ensure logoRefs exists
     const paths = logoRefs.current?.querySelectorAll('path');
     if (!paths || paths.length === 0) {
       console.warn('No paths found in logoRefs');
       return;
     }
   
+    // Set initial faded color using GSAP to avoid FOUC (Flash of Unstyled Content)
+    gsap.set(paths, {
+      fill: '#b3b3b3', // Light gray, faded look
+      stroke: '#b3b3b3',
+    });
+  
     // Variable to track if logo is hidden
     let isHidden = false;
   
+    // GSAP Timeline with ScrollTrigger
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRefs.current,
         start: 'top center',
-        end: 'bottom center-=-30px',
-        scrub: 0.2,
+        end: 'bottom center-=-1vh',
+        scrub: 0.1, // Reduced for smoother response
         markers: false,
         onUpdate: (self) => {
-          // Detect scroll direction and progress
+          // Simplified scroll direction logic
           if (self.progress <= 0.05 && !isHidden) {
-            // Near the top of the section
+            // Fade out near top
             gsap.to(logoRefs.current, {
               opacity: 0,
-              duration: 0.3,
+              duration: 0.1,
+              scrub: 1,
               ease: 'power2.inOut',
               onComplete: () => {
                 isHidden = true;
               },
             });
-          } else if (self.direction === 1) {
-            // Scrolling down
-            isHidden = true;
-          } else if (self.direction === -1 && isHidden && self.progress > 0.05) {
-            // Scrolling up, logo is hidden, and not at the top
+          } else if (self.progress > 0.05 && isHidden && self.direction === -1) {
+            // Fade in when scrolling up
             gsap.to(logoRefs.current, {
               opacity: 1,
-              duration: 0.5,
+              duration: 0.3,
               ease: 'power2.inOut',
             });
             isHidden = false;
@@ -381,13 +387,14 @@ function Home() {
           y: -120,
           x: 160,
           scale: 1.4,
+          willChange: 'transform, opacity', // Optimize rendering
         },
         {
           opacity: 1,
           y: 50,
           x: 300,
           scale: 0.6,
-          duration: 1.5,
+          duration: 1.2, // Slightly faster for smoother feel
           ease: 'power2.inOut',
         }
       )
@@ -395,37 +402,37 @@ function Home() {
         scrollImageRef.current,
         {
           opacity: 0,
-          duration: 0.2,
+          duration: 0.15,
           ease: 'power2.inOut',
         },
-        '-=1.5'
+        '-=1.2'
       )
       .to(
         paths,
         {
-          fill: '#012fcb',
+          fill: '#012fcb', // Transition to final color
           stroke: '#012fcb',
-          duration: 1,
+          duration: 1.8, // Faster color transition
           ease: 'none',
         },
-        '-=1.5'
+        '-=1.2'
       )
       .to(
         logoRefs.current,
         {
           y: 601,
           x: 609,
-          scale: 0.2,
-          duration: 1.5,
+          scale: 0.1,
+          duration: 9.2,
           ease: 'power2.inOut',
         },
-        '-=0.5'
+        '-=0.2'
       )
       .to(
         logoRefs.current,
         {
           opacity: 0,
-          duration: 0.5,
+          duration: 2.3,
           ease: 'power2.inOut',
           onComplete: () => {
             isHidden = true;
@@ -434,17 +441,19 @@ function Home() {
         '>'
       );
   
-    // Handle resize to refresh ScrollTrigger
+    // Debounced resize handler
     let timeout;
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
-    });
+      timeout = setTimeout(() => ScrollTrigger.refresh(), 150); // Increased debounce time
+    };
+    window.addEventListener('resize', handleResize);
   
     // Cleanup
     return () => {
+      tl.kill(); // Kill the timeline
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      window.removeEventListener('resize', () => {});
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
   const section1Ref = useRef(null);
@@ -778,7 +787,8 @@ function Home() {
                 const boxRect = box.getBoundingClientRect();
                 const isInside = imgRect.top < boxRect.bottom && imgRect.bottom > boxRect.top;
                 if (isInside) {
-                  box.style.backgroundColor = "#EFF7FE";
+                  // box.style.backgroundColor = "#EFF7FE";
+                  box.style.backgroundColor = "";
                 } else {
                   box.style.backgroundColor = "";
                 }
@@ -808,32 +818,33 @@ bottomImages.forEach((img) => {
     {
       x: 0,
       y: 0,
-      scale: 1,
+      scale: 0.7,
       opacity: 1,
       visibility: "hidden",
     },
     {
       x: () => getOffsets().x,
       y: () => getOffsets().y,
-      scale: 0.8,
+      scale: 0.4  ,
       opacity: 0,
+  duration: 3.5,
       visibility: "visible",
       ease: "power2.out",
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: "top center+=100",
+        start: "top center+=70",
         end: "bottom center-=20",
         scrub: 2,
-        onEnter: () => {
-          if (!img.dataset.hidden) {
-            gsap.set(img, { visibility: "visible" });
-          }
-        },
-        onLeaveBack: () => {
-          if (!img.dataset.hidden) {
-            gsap.set(img, { visibility: "hidden" });
-          }
-        },
+        // onEnter: () => {
+        //   if (!img.dataset.hidden) {
+        //     gsap.set(img, { visibility: "visible" });
+        //   }
+        // },
+        // onLeaveBack: () => {
+        //   if (!img.dataset.hidden) {
+        //     gsap.set(img, { visibility: "hidden" });
+        //   }
+        // },
       },
     }
   );
@@ -842,13 +853,14 @@ bottomImages.forEach((img) => {
 // Synchronized Fade-Out: section2Image and bottomImages
 gsap.to([section2Image, ...bottomImages], {
   opacity: 0,
-  visibility: "hidden",
+  scale: 0.4,
+  duration: 3.5,
   ease: "power2.out",
   scrollTrigger: {
     trigger: section2Ref.current,
-    start: "bottom center-=10",
-    end: "bottom center",
-    scrub: 1,
+    start: "bottom center-=20",
+    end: "bottom center-=20",
+    scrub: 5,
     onComplete: () => {
       // Lock hidden state
       gsap.set([section2Image, ...bottomImages], {
@@ -902,7 +914,7 @@ gsap.to([section2Image, ...bottomImages], {
             y: 50,
             x: 550,
             ease: "power3.out",
-            duration: 1.5,
+            duration: 5.5,
           }
         )
         .to(logoRefs1.current, {
@@ -911,7 +923,7 @@ gsap.to([section2Image, ...bottomImages], {
           x: 550,
           scale: 0.2,
           ease: "power3.inOut",
-          duration: 1.5,
+          duration: 7.5,
         });
     
       // Handle resize to refresh ScrollTrigger
@@ -978,7 +990,8 @@ gsap.to([section2Image, ...bottomImages], {
               const boxRect = box.getBoundingClientRect();
               const isInside = imgRect.top < boxRect.bottom && imgRect.bottom > boxRect.top;
               if (isInside) {
-                box.style.backgroundColor = "#EFF7FE";
+                // box.style.backgroundColor = "#EFF7FE";
+                box.style.backgroundColor = "";
               } else {
                 box.style.backgroundColor = "";
               }
