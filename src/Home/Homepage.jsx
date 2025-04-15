@@ -362,7 +362,6 @@ function Home() {
             gsap.to(logoRefs.current, {
               opacity: 0,
               duration: 0.1,
-              scrub: 1,
               ease: 'power2.inOut',
               onComplete: () => {
                 isHidden = true;
@@ -412,7 +411,7 @@ function Home() {
         {
           fill: '#012fcb', // Transition to final color
           stroke: '#012fcb',
-          duration: 1.8, // Faster color transition
+          duration: 0.8, // Faster color transition
           ease: 'none',
         },
         '-=1.2'
@@ -423,16 +422,16 @@ function Home() {
           y: 601,
           x: 609,
           scale: 0.1,
-          duration: 9.2,
+          duration: 3.2,
           ease: 'power2.inOut',
         },
-        '-=0.2'
+        '-=0.5'
       )
       .to(
         logoRefs.current,
         {
           opacity: 0,
-          duration: 2.3,
+          duration: 0.3,
           ease: 'power2.inOut',
           onComplete: () => {
             isHidden = true;
